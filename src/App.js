@@ -1,25 +1,30 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from 'react';
 
-function App() {
+const App = () => {
+  const [temperature, setTemperature] = useState(20);
+
+  const handleIncrement = () => {
+    setTemperature(temperature + 1);
+  };
+
+  const handleDecrement = () => {
+    setTemperature(temperature - 1);
+  };
+
+  let backgroundColor = 'yellow';
+  if (temperature > 30 && temperature <= 50) {
+    backgroundColor = 'orange';
+  } else if (temperature > 50) {
+    backgroundColor = 'red';
+  }
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div style={{ backgroundColor }}>
+      <h1>Temperature: {temperature}°C</h1>
+      <button onClick={handleIncrement}>Increment</button>
+      <button onClick={handleDecrement}>Decrement</button>
     </div>
   );
-}
+};
 
 export default App;
