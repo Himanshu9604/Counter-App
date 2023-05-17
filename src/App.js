@@ -1,30 +1,49 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import './style.css'; 
 
-const App = () => {
-  const [temperature, setTemperature] = useState(20);
+function App() {
+  const [quote, setQuote] = useState('');
+  const [quoteColor, setQuoteColor] = useState('');
 
-  const handleIncrement = () => {
-    setTemperature(temperature + 1);
+  useEffect(() => {
+    const fetchQuote = () => {
+      fetch('https://type.fit/api/quotes')
+        .then(response => response.json())
+        .then(data => {
+          const randomIndex = Math.floor(Math.random() * data.length);
+          setQuote(data[randomIndex].text);
+          setQuoteColor(generateRandomColor());
+        })
+        .catch(error => {
+          console.error('Error fetching quotes:', error);
+        });
+    };
+
+    fetchQuote();
+
+    const timer = setInterval(fetchQuote, 5000);
+
+    return () => clearInterval(timer);
+  }, []);
+
+  const generateRandomColor = () => {
+    const randomColor = '#' + Math.floor(Math.random() * 16777215).toString(16);
+    return randomColor;
   };
 
-  const handleDecrement = () => {
-    setTemperature(temperature - 1);
+  const quoteStyle = {
+    color: quoteColor,
   };
-
-  let backgroundColor = 'yellow';
-  if (temperature > 30 && temperature <= 50) {
-    backgroundColor = 'orange';
-  } else if (temperature > 50) {
-    backgroundColor = 'red';
-  }
 
   return (
-    <div style={{ backgroundColor }}>
-      <h1>Temperature: {temperature}°C</h1>
-      <button onClick={handleIncrement}>Increment</button>
-      <button onClick={handleDecrement}>Decrement</button>
+    <div className="quote-container">
+      <h1 className="quote-title">Random Quote:</h1>
+      <p className="quote-text" style={quoteStyle}>
+        {quote}
+      </p>
     </div>
   );
-};
+}
 
 export default App;
+
